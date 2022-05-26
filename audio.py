@@ -1,4 +1,4 @@
-from errorhandler import WRONG_VALUE_TYPE
+from errorhandler import AUDIO_ENTRY_NOT_IN_ENTRY_LIST, WRONG_VALUE_TYPE
 from files import audioFile, file
 from playsound import *
 from pyflac import *
@@ -6,21 +6,33 @@ from pyflac import *
 
 def checkAudioType(audiofile, extension) -> None:
     if not file.getFileExtension(audiofile) == extension:
-        raise WRONG_VALUE_TYPE(WRONG_VALUE_TYPE.text)
+        raise WRONG_VALUE_TYPE
 
 
-class audioEntryManager:
-    def __init__(self, entry) -> None:
-        self.entries = [] 
-        self.entry = entry
+class audioEntryManager(str):
+    entries = []
+    stored  = []
 
-    def addEntry(self):
-        self.entries.append(self.entry)
+    def __init__(self, name) -> None:
+        self.name   = name
 
-    def removeEntry(self):
-        if not self.entry in self.entries:
-            raise 
-        self.entries.remove(self.entry)
+    def addEntry(self, entry) -> None:
+        if entry in self.entries:
+            return
+        self.entries.append(entry)
+
+    def removeEntry(self, entry):
+        if not entry in self.entries:
+            raise AUDIO_ENTRY_NOT_IN_ENTRY_LIST
+        self.entries.remove(entry)
+
+    def store(self, entry):
+        self.stored.append(entry)
+
+    def clean(self, entry):
+        if not entry in self.stored:
+            raise AUDIO_ENTRY_NOT_IN_ENTRY_LIST
+        self.entries.remove(entry)
 
 
 class audioMetaDataManager:

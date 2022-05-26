@@ -1,12 +1,16 @@
+from genericpath import isfile
+from pathlib import Path
 import sys
 import ntpath as path
 import PySide6.QtGui as gui
-import menufunctions as function
+from menufunctions import *
 from PyQt6 import *
 from PySide6 import QtCore as core
 from PySide6.QtWidgets import *
-from files import file
+from files import *
 from audio import *
+from os import listdir
+from os.path import splitext
 
 
 class definitions:
@@ -76,20 +80,34 @@ class main(QWidget):
         self.layout.setRowStretch(4, 1)
 
 
-
+        manager = audioEntryManager("display")
         def fileSelectorClick():
-            manager = audioEntryManager
             dialog = QFileDialog.getOpenFileNames(self, "Open audio files...", "C:\\", "Audio Files (*.wav *.flac *.ogg *.mp3)")
             
             for filePath in dialog[0]:
                 audioName = file(filePath).getFileBaseName()
                 manager.addEntry(audioName)
             
-            function.displayDump()
+            for entry in displayDump(manager):
+                display.addItem(entry["item"])
+                display.setItemWidget(entry["item"], entry["widget"])
 
+            manager.entries = []
                 
         def folderSelectorClick():
             dialog = QFileDialog.getExistingDirectory(self, "Select Folder", "C:\\")
+            fold = folder(dialog).getFilesInDirectory()
+            
+            for filePath in fold:
+                file(filePath).getFileBaseName()
+                    
+                manager.entries.append(file(filePath).getFileBaseName())
+
+            for entry in displayDump(manager):
+                display.addItem(entry["item"])
+                display.setItemWidget(entry["item"], entry["widget"])   
+
+            manager.entries = []             
 
         fileSelector.clicked.connect(fileSelectorClick)
         folderSelector.clicked.connect(folderSelectorClick)
