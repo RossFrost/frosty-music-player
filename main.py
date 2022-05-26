@@ -31,7 +31,6 @@ class main(QWidget):
 
         self.setFixedSize(500, 400)
 
-
         queue           = QWidget()
         title           = QLabel("Music Player")
         searchLabel     = QLabel("Search: ", alignment = definitions.center)
@@ -72,13 +71,11 @@ class main(QWidget):
         menuShellLayout.addWidget(menu,         0, 0    )
         menuShellLayout.addWidget(display,      0, 1    )
 
-
         self.layout = QGridLayout(self)
         self.layout.addWidget(queue,            0, 0    )
         self.layout.addLayout(importLayout,     1, 0    )
         self.layout.addLayout(menuShellLayout,  2, 0    )
         self.layout.setRowStretch(4, 1)
-
 
         manager = audioEntryManager("display")
         def fileSelectorClick():
