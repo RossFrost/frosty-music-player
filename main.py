@@ -2,6 +2,7 @@ from genericpath import isfile
 from pathlib import Path
 import sys
 import ntpath as path
+from wsgiref.util import setup_testing_defaults
 import PySide6.QtGui as gui
 from menufunctions import *
 from PyQt6 import *
@@ -22,10 +23,7 @@ class definitions:
     right       = core.Qt.AlignRight
 
 
-
-
-
-class main(QWidget):
+class importWindow(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -110,10 +108,50 @@ class main(QWidget):
         folderSelector.clicked.connect(folderSelectorClick)
 
 
+class settingsWindow(QWidget):
+    def __init__(self) -> None:
+        super().__init__()
+
+
+class mainWindow(QWidget):
+    displaySettings = displaySettingsMain()
+
+    def __init__(self) -> None:
+        super().__init__()
+
+        layout          = QGridLayout()
+        importB         = QPushButton("Import")
+        settings        = QPushButton("Settings")
+
+        playlists       = QScrollArea()
+        table           = QTableWidget()
+        item            = QTableWidgetItem()
+
+        
+
+
+        table.setBaseSize(100, 100)
+        table.setColumnCount(self.displaySettings.displayCount()) #track, artist, playlist, more
+        playlists.setWidget(table)
+
+        layout.addWidget(importB,   0, 0)
+        layout.addWidget(settings,  0, 1)
+        layout.addWidget(playlists,     1, 2)
+
+        self.setLayout(layout) 
+
+        self.importWin = importWindow()
+        def importButtonClick() -> None:
+            if not self.importWin.isVisible():
+                self.importWin.show()  
+            
+        importB.clicked.connect(importButtonClick)
+
+
 if __name__ == "__main__":
     app = QApplication([])
     app.setApplicationName("Frosty's Music Player")
-    out = main()
+    out = mainWindow()
     out.show()
 
     sys.exit(app.exec())

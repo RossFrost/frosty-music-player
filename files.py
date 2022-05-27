@@ -21,9 +21,6 @@ class file(str):
 
         return base
 
-    def getMetaData():
-        pass
-
 
 class folder(str):
     def __init__(self, folderpath) -> None:
@@ -51,4 +48,6 @@ class audioFile(file):
         if not file.getFileExtension(filepath) in extensions:
             raise WRONG_VALUE_TYPE
 
+    def getMeta():
+        pass
 
